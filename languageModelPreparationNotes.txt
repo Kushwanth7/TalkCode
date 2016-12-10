@@ -1,0 +1,6 @@
+If you are using the existing acoustic model
+
+clear all the files in the data/local/dict directory
+clear all the files in the data/lang and data/local/lang directory
+
+then look at the file runKeywordModel.sh file and run it
