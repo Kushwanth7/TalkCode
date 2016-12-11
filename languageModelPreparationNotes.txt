@@ -4,3 +4,5 @@ clear all the files in the data/local/dict directory
 clear all the files in the data/lang and data/local/lang directory
 
 then look at the file runKeywordModel.sh file and run it
+
+Before creating the arpa file using SRILM create a file called corpus.txt in data/local which contains all of the words that is spoken
