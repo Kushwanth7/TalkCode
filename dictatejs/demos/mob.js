@@ -8,9 +8,8 @@
 //  - dictate: dictate object with control methods 'init', 'startListening', ...
 //       and event callbacks onResults, onError, ...
 var serverNames = ["Recognition Server", "Keyword Server", "Phoneme Server", "Grapheme Server"];
-var servers = ["ws://a19d7dc7.ngrok.io/client/ws/speech","keyword url", "phoneme url","grapheme url"];
-var serverStatus = ["ws://a19d7dc7.ngrok.io/client/ws/status","keyword server status","phoneme server status","grapheme server status"];
-var referenceHandlers = ["http://a19d7dc7.ngrok.io/dev/duplex-speech-api/dynamic/reference","","",""];
+var servers = ["ws://a19d7dc7.ngrok.io/client/ws/speech","ws://8980d22b.ngrok.io/client/ws/speech", "phoneme url","grapheme url"];
+var serverStatus = ["ws://a19d7dc7.ngrok.io/client/ws/status","ws://8980d22b.ngrok.io/client/ws/status","phoneme server status","grapheme server status"];
 var recognitionWords = ["okkeyword.","okphoneme.","okgrapheme."];
 var isConnected = false;
 var currentServer = serverNames[0];
@@ -175,7 +174,13 @@ function __changeServer(serverIndex)
 {
   currentServer = serverNames[serverIndex + 1];
   $("#server").text(currentServer);
+  dictate.cancel();
+  dictate.setServer(servers[serverIndex + 1]);
+  dictate.setServerStatus(serverStatus[serverIndex + 1]);
+  console.log("Starting the " + serverNames[serverIndex + 1]);
+  dictate.startListening();
 }
+
 
 // Public methods (called from the GUI)
 function toggleListening() {
