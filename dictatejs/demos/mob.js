@@ -8,8 +8,10 @@
 //  - dictate: dictate object with control methods 'init', 'startListening', ...
 //       and event callbacks onResults, onError, ...
 var serverNames = ["Recognition Server", "Keyword Server", "Phoneme Server", "Grapheme Server"];
-var servers = ["wss://bark.phon.ioc.ee:8443/english/duplex-speech-api/ws/speech","keyword url", "phoneme url","grapheme url"];
-var serverStatus = ["wss://bark.phon.ioc.ee:8443/english/duplex-speech-api/ws/status","keyword server status","phoneme server status","grapheme server status"];
+var servers = ["ws://a19d7dc7.ngrok.io/client/ws/speech","keyword url", "phoneme url","grapheme url"];
+var serverStatus = ["ws://a19d7dc7.ngrok.io/client/ws/status","keyword server status","phoneme server status","grapheme server status"];
+var referenceHandlers = ["http://a19d7dc7.ngrok.io/dev/duplex-speech-api/dynamic/reference","","",""];
+var recognitionWords = ["okkeyword.","okphoneme.","okgrapheme."];
 var isConnected = false;
 var currentServer = serverNames[0];
 var tt = new Transcription();
@@ -19,8 +21,9 @@ var endPosition = 0;
 var doUpper = false;
 var doPrependSpace = true;
 
+//This function has been modified to return lowercase strings
 function capitaliseFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+    return string.toLowerCase();
 }
 
 function prettyfyHyp(text, doCapFirst, doPrependSpace) {
@@ -108,7 +111,27 @@ var dictate = new Dictate({
 			$("#trans").prop("selectionStart", endPosition);
 		},
 		onResults : function(hypos) {
-			hypText = prettyfyHyp(hypos[0].transcript, doUpper, doPrependSpace);
+			hypText = hypos[0].transcript;//prettyfyHyp(hypos[0].transcript, doUpper, doPrependSpace);
+      if(currentServer == serverNames[0])
+      {
+          if(recognitionWords.includes(hypText))
+          {
+            var serverIndex;
+            if(hypText == recognitionWords[0])
+            {
+              serverIndex = 0;
+            }
+            else if(hypText == recognitionWords[1])
+            {
+              serverIndex = 1;
+            }
+            else
+            {
+                serverIndex = 2;
+            }
+            __changeServer(serverIndex);
+          }
+      }
 			val = $("#trans").val();
 			$("#trans").val(val.slice(0, startPosition) + hypText + val.slice(endPosition));
 			startPosition = startPosition + hypText.length;
@@ -148,6 +171,12 @@ function __updateTranscript(text) {
 	$("#trans").val(text);
 }
 
+function __changeServer(serverIndex)
+{
+  currentServer = serverNames[serverIndex + 1];
+  $("#server").text(currentServer);
+}
+
 // Public methods (called from the GUI)
 function toggleListening() {
 	if (isConnected) {
@@ -168,9 +197,9 @@ function clearTranscription() {
 	$("#trans").prop("selectionEnd", 0);
 }
 
-$(document).ready(function() {
+$(document).ready(function()
+{
 	dictate.init();
-
   $("#server").text(currentServer);
   /*
 	$("#servers").change(function() {
