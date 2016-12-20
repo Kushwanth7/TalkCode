@@ -7,8 +7,11 @@
 //  - tt: simple structure for managing the list of hypotheses
 //  - dictate: dictate object with control methods 'init', 'startListening', ...
 //       and event callbacks onResults, onError, ...
+var serverNames = ["Recognition Server", "Keyword Server", "Phoneme Server", "Grapheme Server"];
+var servers = ["wss://bark.phon.ioc.ee:8443/english/duplex-speech-api/ws/speech","keyword url", "phoneme url","grapheme url"];
+var serverStatus = ["wss://bark.phon.ioc.ee:8443/english/duplex-speech-api/ws/status","keyword server status","phoneme server status","grapheme server status"];
 var isConnected = false;
-
+var currentServer = serverNames[0];
 var tt = new Transcription();
 
 var startPosition = 0;
@@ -53,8 +56,8 @@ function prettyfyHyp(text, doCapFirst, doPrependSpace) {
 
 
 var dictate = new Dictate({
-		server : $("#servers").val().split('|')[0],
-		serverStatus : $("#servers").val().split('|')[1],
+		server : servers[0],
+		serverStatus : serverStatus[0],
 		recorderWorkerPath : '../lib/recorderWorker.js',
 		onReadyForSpeech : function() {
 			isConnected = true;
@@ -168,7 +171,7 @@ function clearTranscription() {
 $(document).ready(function() {
 	dictate.init();
 
-  $("#servers").text("Recognizer Server");
+  $("#server").text(currentServer);
   /*
 	$("#servers").change(function() {
 		dictate.cancel();
