@@ -6,10 +6,10 @@
 //  - isConnected: true iff we are connected to a worker
 //  - tt: simple structure for managing the list of hypotheses
 //  - dictate: dictate object with control methods 'init', 'startListening', ...
-//       and event callbacks onResults, onError, ...
+//       and event callbacks onResults, onError, ..., ec007e42.ngrok.io
 var serverNames = ["Recognition Server", "Keyword Server", "Phoneme Server", "Grapheme Server"];
-var servers = ["ws://a19d7dc7.ngrok.io/client/ws/speech","ws://8980d22b.ngrok.io/client/ws/speech", "phoneme url","grapheme url"];
-var serverStatus = ["ws://a19d7dc7.ngrok.io/client/ws/status","ws://8980d22b.ngrok.io/client/ws/status","phoneme server status","grapheme server status"];
+var servers = ["ws://a19d7dc7.ngrok.io/client/ws/speech","ws://8980d22b.ngrok.io/client/ws/speech", "ws://ec007e42.ngrok.io/client/ws/speech","grapheme url"];
+var serverStatus = ["ws://a19d7dc7.ngrok.io/client/ws/status","ws://8980d22b.ngrok.io/client/ws/status","ws://ec007e42.ngrok.io/client/ws/status","grapheme server status"];
 var recognitionWords = ["okkeyword.","okphoneme.","okgrapheme."];
 var isConnected = false;
 var currentServer = serverNames[0];
@@ -20,8 +20,124 @@ var endPosition = 0;
 var doUpper = false;
 var doPrependSpace = true;
 
+
+function getKeywordMeaning(key)
+{
+  var processedKey="";
+  if(key == "close." || key == "closebracket.")
+  {
+    processedKey=")";
+  }
+  else if(key == "closeflower.")
+  {
+    processedKey="}";
+  }
+  else if(key == "console.")
+  {
+    processedKey = "console";
+  }
+  else if(key == "divide.")
+  {
+    processedKey = "/";
+  }
+  else if(key == "dot." || key == "point.")
+  {
+    processedKey = ".";
+  }
+  else if(key == "else.")
+  {
+    processedKey = "else";
+  }
+  else if(key == "equals.")
+  {
+    processedKey = "=";
+  }
+  else if(key == "erase.")
+  {
+    processedKey = "";//This has to be implemented to undo the previous statement
+  }
+  else if(key == "false.")
+  {
+    processedKey = "false";
+  }
+  else if(key == "for.")
+  {
+    processedKey = "for";
+  }
+  else if(key == "function.")
+  {
+    processedKey = "function";
+  }
+  else if(key == "if.")
+  {
+    processedKey = "if";
+  }
+  else if(key == "log.")
+  {
+    processedKey = "log";
+  }
+  else if(key == "minus.")
+  {
+    processedKey = "-";
+  }
+  else if(key == "multiply.")
+  {
+    processedKey = "*";
+  }
+  else if (key == "nextline.")
+  {
+    processedKey = "\n";
+  }
+  else if (key == "open." || key == "openbracket.")
+  {
+    processedKey = "(";
+  }
+  else if(key == "openflower.")
+  {
+    processedKey = "{";
+  }
+  else if (key == "plus.")
+  {
+    processedKey = "+";
+  }
+  else if (key == "quote.")
+  {
+    processedKey = "\"";
+  }
+  else if (key == "return.")
+  {
+    processedKey = "return";
+  }
+  else if (key == "semicolon.")
+  {
+    processedKey = ";";
+  }
+  else if (key == "space.")
+  {
+    processedKey = " ";
+  }
+  else if (key == "switch.") //this keyword is used to switch back to the recognition server
+  {
+    processedKey = "switch";
+  }
+  else if(key == "true.")
+  {
+    processedKey = "true";
+  }
+  else if(key == "var.")
+  {
+    processedKey = "var.";
+  }
+  else if(key == "while.")
+  {
+    processedKey = "while";
+  }
+  return processedKey;
+}
+
 //This function has been modified to return lowercase strings
-function capitaliseFirstLetter(string) {
+function capitaliseFirstLetter(string)
+{
     return string.toLowerCase();
 }
 
@@ -118,20 +234,41 @@ var dictate = new Dictate({
             var serverIndex;
             if(hypText == recognitionWords[0])
             {
-              serverIndex = 0;
+              serverIndex = 1;
             }
             else if(hypText == recognitionWords[1])
             {
-              serverIndex = 1;
+              serverIndex = 2;
             }
             else
             {
-                serverIndex = 2;
+              serverIndex = 3;
             }
+            console.log("Changing the server to " + serverNames[serverIndex]);
             __changeServer(serverIndex);
           }
+          //hypText=""; //This has to be an empty string
+      }
+      else if(currentServer == serverNames[1])//keyword server
+      {
+          hypText = getKeywordMeaning(hypText);
+          if(hypText == "switch") //switch keyword is used to switch back to the recognition server
+          {
+            __changeServer(0);
+          }
+      }
+      else if(currentServer == serverNames[2])//phoneme server
+      {
+          //change the server back to recognition server
+          __changeServer(0);
+      }
+      else if(currentServer == serverNames[3])//grapheme server
+      {
+          //change the server back to recognition server
+          __changeServer(0);
       }
 			val = $("#trans").val();
+      console.log("The current value = " + val);
 			$("#trans").val(val.slice(0, startPosition) + hypText + val.slice(endPosition));
 			startPosition = startPosition + hypText.length;
 			endPosition = startPosition;
@@ -172,12 +309,12 @@ function __updateTranscript(text) {
 
 function __changeServer(serverIndex)
 {
-  currentServer = serverNames[serverIndex + 1];
+  currentServer = serverNames[serverIndex];
   $("#server").text(currentServer);
   dictate.cancel();
-  dictate.setServer(servers[serverIndex + 1]);
-  dictate.setServerStatus(serverStatus[serverIndex + 1]);
-  console.log("Starting the " + serverNames[serverIndex + 1]);
+  dictate.setServer(servers[serverIndex]);
+  dictate.setServerStatus(serverStatus[serverIndex]);
+  console.log("Starting the " + serverNames[serverIndex]);
   dictate.startListening();
 }
 
