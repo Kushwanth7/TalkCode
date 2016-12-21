@@ -227,6 +227,7 @@ var dictate = new Dictate({
 		},
 		onResults : function(hypos) {
 			hypText = hypos[0].transcript;//prettyfyHyp(hypos[0].transcript, doUpper, doPrependSpace);
+      $("#recognizedWords").val(hypText);
       if(currentServer == serverNames[0])
       {
           if(recognitionWords.includes(hypText))

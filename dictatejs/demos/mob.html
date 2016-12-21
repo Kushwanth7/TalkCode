@@ -44,14 +44,19 @@
 <button
     onclick="clearTranscription();"
     title="Clears the transcription">Clear</button>
+<button
+    onclick="execute();"
+    title="Execute the javascript code">Execute</button>
 </span>
 </div>
 
-<textarea id="trans" rows="5" style="width:100%; margin-top:.5em">
+<textarea id="trans" rows="5" style="width:100%;margin-top:.5em">
 </textarea>
 
-<p id="server" name="server"></p>
-
+<p id="server" name="server"><b></b></p>
+<p><font color="blue"><i>Words Recognized </i></font></p>
+<textarea id="recognizedWords" rows="1" style="width:100%;">
+</textarea>
 <hr/>
 
 <pre id="log">
