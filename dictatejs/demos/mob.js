@@ -245,7 +245,6 @@ var dictate = new Dictate({
             {
               serverIndex = 3;
             }
-            console.log("Changing the server to " + serverNames[serverIndex]);
             __changeServer(serverIndex);
           }
           //hypText=""; //This has to be an empty string
@@ -269,7 +268,6 @@ var dictate = new Dictate({
           __changeServer(0);
       }
 			val = $("#trans").val();
-      console.log("The current value = " + val);
 			$("#trans").val(val.slice(0, startPosition) + hypText + val.slice(endPosition));
 			startPosition = startPosition + hypText.length;
 			endPosition = startPosition;
@@ -315,7 +313,6 @@ function __changeServer(serverIndex)
   dictate.cancel();
   dictate.setServer(servers[serverIndex]);
   dictate.setServerStatus(serverStatus[serverIndex]);
-  console.log("Starting the " + serverNames[serverIndex]);
   dictate.startListening();
 }
 
@@ -331,6 +328,29 @@ function toggleListening() {
 
 function cancel() {
 	dictate.cancel();
+}
+
+
+var stores = [];
+var oldf = console.log;
+console.log = function(m){
+   stores.push(arguments);
+   oldf.apply(console, arguments);
+}
+
+function execute()
+{
+  var code = $("#trans").val();
+  var result = new Function(code)();
+  for(var i=0; i<stores.length;i++)
+  {
+    store = stores[i];
+    for(x in store)
+    {
+       $("#exec").val($("#exec").val() + store[x] + "\n");
+    }
+  }
+  stores=[];
 }
 
 function clearTranscription() {
