@@ -8,8 +8,8 @@
 //  - dictate: dictate object with control methods 'init', 'startListening', ...
 //       and event callbacks onResults, onError, ..., ec007e42.ngrok.io
 var serverNames = ["Recognition Server", "Keyword Server", "Phoneme Server", "Grapheme Server"];
-var servers = ["ws://a19d7dc7.ngrok.io/client/ws/speech","ws://8980d22b.ngrok.io/client/ws/speech", "ws://ec007e42.ngrok.io/client/ws/speech","grapheme url"];
-var serverStatus = ["ws://a19d7dc7.ngrok.io/client/ws/status","ws://8980d22b.ngrok.io/client/ws/status","ws://ec007e42.ngrok.io/client/ws/status","grapheme server status"];
+var servers = ["ws://5129d83a.ngrok.io/client/ws/speech","ws://c23acf6a.ngrok.io/client/ws/speech", "ws://467b9c63.ngrok.io/client/ws/speech","grapheme url"];
+var serverStatus = ["ws://5129d83a.ngrok.io/client/ws/status","ws://c23acf6a.ngrok.io/client/ws/status","ws://467b9c63.ngrok.io/client/ws/status","grapheme server status"];
 var recognitionWords = ["okkeyword.","okphoneme.","okgrapheme."];
 var isConnected = false;
 var currentServer = serverNames[0];
@@ -118,7 +118,7 @@ function getKeywordMeaning(key)
   }
   else if (key == "switch.") //this keyword is used to switch back to the recognition server
   {
-    processedKey = "switch";
+    processedKey = "";
   }
   else if(key == "true.")
   {
@@ -247,7 +247,7 @@ var dictate = new Dictate({
             }
             __changeServer(serverIndex);
           }
-          //hypText=""; //This has to be an empty string
+          hypText=""; //This has to be an empty string
       }
       else if(currentServer == serverNames[1])//keyword server
       {
