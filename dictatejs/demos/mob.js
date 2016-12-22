@@ -8,8 +8,8 @@
 //  - dictate: dictate object with control methods 'init', 'startListening', ...
 //       and event callbacks onResults, onError, ..., ec007e42.ngrok.io
 var serverNames = ["Recognition Server", "Keyword Server", "Phoneme Server", "Grapheme Server"];
-var servers = ["ws://a37696b4.ngrok.io/client/ws/speech","ws://8aa8fb1d.ngrok.io/client/ws/speech", "ws://ffc9fe22.ngrok.io/client/ws/speech","grapheme url"];
-var serverStatus = ["ws://a37696b4.ngrok.io/client/ws/status","ws://8aa8fb1d.ngrok.io/client/ws/status","ws://ffc9fe22.ngrok.io/client/ws/status","grapheme server status"];
+var servers = ["ws://ca7e588f.ngrok.io/client/ws/speech","ws://ad993371.ngrok.io/client/ws/speech", "ws://06c74345.ngrok.io/client/ws/speech","grapheme url"];
+var serverStatus = ["ws://ca7e588f.ngrok.io/client/ws/status","ws://ad993371.ngrok.io/client/ws/status","ws://06c74345.ngrok.io/client/ws/status","grapheme server status"];
 var recognitionWords = ["okkeyword.","okphoneme.","okgrapheme."];
 var isConnected = false;
 var currentServer = serverNames[0];
