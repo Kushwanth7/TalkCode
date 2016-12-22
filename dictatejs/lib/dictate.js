@@ -205,7 +205,7 @@
                         //Firefox loses the audio input stream every five seconds
                         // To fix added the input to window.source
                         window.source = input;
-                        
+
 			// make the analyser available in window context
 			window.userSpeechAnalyser = audioContext.createAnalyser();
 			input.connect(window.userSpeechAnalyser);
