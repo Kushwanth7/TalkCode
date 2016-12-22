@@ -118,7 +118,7 @@ function getKeywordMeaning(key)
   }
   else if (key == "switch.") //this keyword is used to switch back to the recognition server
   {
-    processedKey = "";
+    processedKey = "switch";
   }
   else if(key == "true.")
   {
@@ -254,6 +254,7 @@ var dictate = new Dictate({
           hypText = getKeywordMeaning(hypText);
           if(hypText == "switch") //switch keyword is used to switch back to the recognition server
           {
+            hypText=""; //
             __changeServer(0);
           }
       }
