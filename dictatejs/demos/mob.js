@@ -8,8 +8,8 @@
 //  - dictate: dictate object with control methods 'init', 'startListening', ...
 //       and event callbacks onResults, onError, ..., ec007e42.ngrok.io
 var serverNames = ["Recognition Server", "Keyword Server", "Phoneme Server", "Grapheme Server"];
-var servers = ["ws://b72ec999.ngrok.io/client/ws/speech","ws://b983bf13.ngrok.io/client/ws/speech", "ws://52ef33a8.ngrok.io/client/ws/speech","grapheme url"];
-var serverStatus = ["ws://b72ec999.ngrok.io/client/ws/status","ws://b983bf13.ngrok.io/client/ws/status","ws://52ef33a8.ngrok.io/client/ws/status","grapheme server status"];
+var servers = ["ws://005bce85.ngrok.io/client/ws/speech","ws://dbea13a5.ngrok.io/client/ws/speech", "ws://2af10418.ngrok.io/client/ws/speech","grapheme url"];
+var serverStatus = ["ws://005bce85.ngrok.io/client/ws/status","ws://dbea13a5.ngrok.io/client/ws/status","ws://2af10418.ngrok.io/client/ws/status","grapheme server status"];
 var recognitionWords = ["okkeyword.","okphoneme.","okgrapheme."];
 var isConnected = false;
 var currentServer = serverNames[0];
@@ -119,6 +119,10 @@ function getKeywordMeaning(key)
   else if (key == "switch.") //this keyword is used to switch back to the recognition server
   {
     processedKey = "switch";
+  }
+  else if(key == "change.")
+  {
+    processedKey = "change";
   }
   else if(key == "true.")
   {
@@ -252,7 +256,7 @@ var dictate = new Dictate({
       else if(currentServer == serverNames[1])//keyword server
       {
           hypText = getKeywordMeaning(hypText);
-          if(hypText == "switch") //switch keyword is used to switch back to the recognition server
+          if(hypText == "change") //switch keyword is used to switch back to the recognition server
           {
             hypText=""; //
             __changeServer(0);
@@ -260,13 +264,19 @@ var dictate = new Dictate({
       }
       else if(currentServer == serverNames[2])//phoneme server
       {
-          //change the server back to recognition server
-          __changeServer(0);
+          if(hypText == "change.") //change keyword is used to switch back to the recognition server
+          {
+            hypText=""; //
+            __changeServer(0);
+          }
       }
       else if(currentServer == serverNames[3])//grapheme server
       {
-          //change the server back to recognition server
-          __changeServer(0);
+          if(hypText == "change.") //change keyword is used to switch back to the recognition server
+          {
+            hypText=""; //
+            __changeServer(0);
+          }
       }
 			val = $("#trans").val();
 			$("#trans").val(val.slice(0, startPosition) + hypText + val.slice(endPosition));
